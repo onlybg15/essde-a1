@@ -11,16 +11,22 @@
 
 ifeq ($(PLATFORM),HOST)
   SOURCES = main.c \
-	memory.c
-  INCLUDES = ../include/common
+	memory.c \
+	data.c \
+	course1.c \
+	stats.c
+  INCLUDES = /include/common
 else
   SOURCES = main.c \
 	memory.c \
+	data.c \
+	course1.c \
+	stats.c \
 	interrupts_msp432p401r_gcc.c \
 	startup_msp432p401r_gcc.c \
 	system_msp432p401r.c
-  INCLUDES = ../include/common \
-	../include/CMSIS \
-	../include/msp432
+  INCLUDES = /include/common \
+	/include/CMSIS \
+	/include/msp432
 endif
 

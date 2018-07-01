@@ -20,6 +20,8 @@
  * @date April 1 2017
  *
  */
+#include <stdlib.h>
+#include <stdint.h>
 #include "memory.h"
 
 /***********************************************************
@@ -46,5 +48,60 @@ void set_all(char * ptr, char value, unsigned int size){
 
 void clear_all(char * ptr, unsigned int size){
   set_all(ptr, 0, size);
+}
+
+uint8_t * my_memmove(uint8_t * src, uint8_t * dst, size_t length) {
+  uint8_t * temp = (uint8_t *) malloc(length);
+  if (temp != NULL) {
+    for (size_t i=0;i<length;i++) {
+      *(temp+i) = *(src+i);		// Copy source data into dynamic memory first
+    }
+    for (size_t i=0;i<length;i++) {
+      *(dst+i) = *(temp+i);		// Then copy back into desired location
+    }
+  }
+  free((void *)temp);
+  return dst;
+}
+
+uint8_t * my_memcopy(uint8_t * src, uint8_t * dst, size_t length) {
+  for (size_t i=0;i<length;i++) {
+    *(dst+i) = *(src+i);		// Copy source data straight to desired location 
+  }
+  return dst;
+}
+
+uint8_t * my_memset(uint8_t * src, size_t length, uint8_t value) {
+  for (size_t i=0;i<length;i++) {
+    *(src+i) = value;			// Set memory location to desired value
+  }
+  return src;
+}
+
+uint8_t * my_memzero(uint8_t * src, size_t length) {
+  for (size_t i=0;i<length;i++) {
+    *(src+i) = 0;			// Set memory location to zero
+  }
+  return src;
+}
+
+uint8_t * my_reverse(uint8_t * src, size_t length) {
+  for (size_t i=0;i<length/2;i++) {		
+    uint8_t temp = *(src+length-1-i);	// Swap first and last values, while iterating over half
+    *(src+length-1-i) = *(src+i);	// of the data set length
+    *(src+i) = temp;
+  }
+  return src;
+}
+
+uint32_t * reserve_words(size_t length) {
+  uint32_t * ptr = NULL;
+  ptr = (uint32_t *) malloc(length * sizeof(int32_t));	// Reserve word length in dynamic memory
+  return ptr;
+}
+
+void free_words(uint32_t * src) {
+  free((void *)src);			// Free dynamic memory and set pointer to NULL
+  src = NULL;
 }
 

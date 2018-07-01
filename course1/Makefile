@@ -31,9 +31,10 @@ include sources.mk
 # Platform Overrides
 #PLATFORM = $(PLATFORM)
 
-TARGET = c1m2
-INC_PARAMS = $(INCLUDES:%=-I%)
+TARGET = course1
+INC_PARAMS = $(INCLUDES:%=-I.%)
 PLAT_PARAMS = -D$(PLATFORM)
+CRSE_PARAMS = -DCOURSE1 -DVERBOSE
 
 ifeq ($(PLATFORM),HOST)
   # Compiler Flags and Defines
@@ -44,7 +45,7 @@ ifeq ($(PLATFORM),HOST)
   OBJDUMP = objdump
   LDFLAGS = -Wl,-Map=$(TARGET).map
   CFLAGS = -Wall -Werror -g -O0 -std=c99
-  CPPFLAGS = $(INC_PARAMS) $(PLAT_PARAMS) -MD
+  CPPFLAGS = $(INC_PARAMS) $(PLAT_PARAMS) $(CRSE_PARAMS) -MD
 else ifeq ($(PLATFORM),MSP432)
   # Architectures Specific Flags
   CPU = cortex-m4
@@ -55,7 +56,7 @@ else ifeq ($(PLATFORM),MSP432)
   FPU = fpv4-sp-d16
 
   # Platform Specific Flags
-  LINKER_FILE = ../msp432p401r.lds
+  LINKER_FILE = msp432p401r.lds
 
   # Compiler Flags and Defines
   CC = arm-none-eabi-gcc
@@ -66,23 +67,24 @@ else ifeq ($(PLATFORM),MSP432)
   LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
   CFLAGS = -mcpu=$(CPU) -m$(ARCH) -march=$(MARCH) -mfloat-abi=$(FLOAT_ABI) \
            -mfpu=$(FPU) --specs=$(SPECS) -Wall -Werror -g -O0 -std=c99
-  CPPFLAGS = $(INC_PARAMS) $(PLAT_PARAMS) -MD
+  CPPFLAGS = $(INC_PARAMS) $(PLAT_PARAMS) $(CRSE_PARAMS) -MD
 endif
 
+SRCDIR = src
 OBJS = $(SOURCES:.c=.o)
 DEPS = $(SOURCES:.c=.d)
 PRES = $(SOURCES:.c=.i)
 ASMS = $(SOURCES:.c=.asm)
 
-%.i : %.c
+%.i : $(SRCDIR)/%.c
 	$(CC) -E $< $(CPPFLAGS) -o $@
 
-%.asm : %.c
+%.asm : $(SRCDIR)/%.c
 	$(CC) -S $< $(CPPFLAGS) $(CFLAGS) -o $@
 	$(AS) $@ -o project.out
 	$(OBJDUMP) -D project.out > project.asm
 
-%.o : %.c	
+%.o : $(SRCDIR)/%.c	
 	$(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
 
 .PHONY: compile-all
@@ -97,7 +99,6 @@ $(TARGET).out: $(OBJS)
 
 .PHONY: clean
 clean:
-	rm -f $(OBJS) $(DEPS) $(PRES) $(ASMS) $(TARGET).out $(TARGET).map \
-              project.asm project.out
+	rm -f $(OBJS) $(DEPS) $(PRES) $(ASMS) $(TARGET).out $(TARGET).map project.asm project.out
 
 
