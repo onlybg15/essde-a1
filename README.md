@@ -4,7 +4,7 @@ Date: 7/1/2018
 Description:  
 This repository is for the Introduction to Embedded Systems Software and Development Environments by the University of Colorado Boulder and taught by Prof. Alex Fosdick.  
   
-This includes folders for the assignements for each week, including the final assignment in the course1 folder. This final assignment compiles everything from the first three weeks and adds some additional memory manipulation functions.  
+This includes folders for the assignements for each week, including the final assignment in the course1 folder. The final assignment compiles everything from the first three weeks and adds some additional memory manipulation functions.  
   
 c1week1: Review of c programming  
 c1week2: Makefiles  
